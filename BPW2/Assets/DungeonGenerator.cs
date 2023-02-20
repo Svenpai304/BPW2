@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using Unity.VisualScripting;
+
 namespace SimpleDungeon
 {
     public enum TileType { Floor, Wall }
@@ -15,6 +17,8 @@ namespace SimpleDungeon
         public int minRoomSize = 3;
         public int maxRoomSize = 9;
         public int numRooms = 10;
+        public int roomSpacingX = 20;
+        private int roomSpacingZ = 20;
         public int startRoomMinOffset = 20;
         public int startRoomMaxOffset = 40;
         public int bossPathMinLength = 3;
@@ -26,7 +30,6 @@ namespace SimpleDungeon
         private int bossPathLength = 0;
         private int lootPathLength = 0;
         private int secretPathLength = 0;
-        private int debugCounter = 0;
         public Vector2 startPoint;
         public Dictionary<Vector3Int, TileType> dungeon = new Dictionary<Vector3Int, TileType>();
         public List<Room> roomList = new List<Room>();
@@ -56,7 +59,7 @@ namespace SimpleDungeon
             ClearDungeon();
             GenerateStart();
             AllocatePathRooms();
-            //ConnectRooms();
+            ConnectRooms();
             AllocateWalls();
             SpawnDungeon();
         }
@@ -78,24 +81,7 @@ namespace SimpleDungeon
         {
             int startX = 0;
             int startY = 0;
-            int startSide = Random.Range(1, 4);
-            switch (startSide)
-            {
-                case 1:
-                    startX = Random.Range(startRoomMinOffset, gridWidth - startRoomMinOffset);
-                    startY = Random.Range(gridHeight - startRoomMaxOffset, gridHeight - startRoomMinOffset); break;
-                case 2:
-                    startX = Random.Range(gridWidth - startRoomMaxOffset, gridWidth - startRoomMinOffset);
-                    startY = Random.Range(startRoomMinOffset, gridHeight - startRoomMinOffset); break;
-                case 3:
-                    startX = Random.Range(startRoomMinOffset, gridWidth - startRoomMinOffset);
-                    startY = Random.Range(startRoomMinOffset, startRoomMaxOffset); break;
-                case 4:
-                    startX = Random.Range(startRoomMinOffset, startRoomMaxOffset);
-                    startY = Random.Range(startRoomMinOffset, gridHeight - startRoomMinOffset); break;
-            }
-            startPoint = new Vector2(startX, startY);
-            Room startRoom = new Room(startX - 3, startX + 3, startY - 3, startY + 3);
+            Room startRoom = new Room(startX, startX + minRoomSize, startY, startY + minRoomSize);
             AddRoomToDungeon(startRoom);
             bossRoomList.Add(startRoom);
             lootRoomList.Add(startRoom);
@@ -107,26 +93,28 @@ namespace SimpleDungeon
 
         private void AllocatePathRooms()
         {
+            int debugCounter = 0;
+
+            bool lootPathSplit = false;
+            bool secretPathSplit = false;
             for (int i = 1; i < bossPathLength; i++)
-            { 
-                int dirX = Random.Range(0, 2) * 2 - 1;
-                int dirZ = Random.Range(0, 2) * 2 - 1;
-                int minX = Random.Range(bossRoomList[i - 1].minX + 20, bossRoomList[i - 1].minX + 25) * dirX;
-                int maxX = minX + Random.Range(minRoomSize, maxRoomSize) * dirX;
-                int minZ = Random.Range(bossRoomList[i - 1].minZ + 20, bossRoomList[i - 1].minZ + 25) * dirZ;
-                int maxZ = minZ + Random.Range(minRoomSize, maxRoomSize) * dirZ;
-                if(minX > maxX)
+            {
+                int bossDirX = Random.Range(0, 2);
+                int bossDirZ = 0;
+
+                if (bossDirX == 0)
                 {
-                    int swapX = minX;
-                    minX = maxX;
-                    maxX = swapX;
+                    bossDirZ = Random.Range(0, 2) * 2 - 1;
                 }
-                if(minZ > maxZ)
+                if (bossDirX == 1)
                 {
-                    int swapZ = minZ;
-                    minZ = maxZ;
-                    maxZ = swapZ;
+                    bossDirX *= Random.Range(0, 2) * 2 - 1;
                 }
+
+                int minX = bossRoomList[i - 1].minX + roomSpacingX * bossDirX;
+                int maxX = minX + Random.Range(minRoomSize, maxRoomSize);
+                int minZ = bossRoomList[i - 1].minZ + roomSpacingZ * bossDirZ;
+                int maxZ = minZ + Random.Range(minRoomSize, maxRoomSize);
                 Room room = new Room(minX, maxX, minZ, maxZ);
                 if (CanRoomFitInDungeon(room))
                 {
@@ -139,23 +127,134 @@ namespace SimpleDungeon
                     i--;
                     debugCounter++;
                 }
-                if(debugCounter > 40)
+                if (debugCounter > 40)
                 {
-                    Debug.Log("Failed to generate path");
+                    Debug.Log("Failed to generate boss path");
                     return;
                 }
             }
+            for (int i = 1; i < lootPathLength; i++)
+            {
+                int rng = Random.Range(1, 4);
+                if (rng == 3 || lootPathSplit || i >= 4)
+                {
+                    lootPathSplit = true;
+                    int dirX = Random.Range(0, 2);
+                    int dirZ = 0;
+                    if (dirX == 0)
+                    {
+                        dirZ = Random.Range(0, 2) * 2 - 1;
+                    }
+                    if (dirX == 1)
+                    {
+                        dirX *= Random.Range(0, 2) * 2 - 1;
+                    }
+                    int minX = lootRoomList[i - 1].minX + roomSpacingX * dirX;
+                    int maxX = minX + Random.Range(minRoomSize, maxRoomSize);
+                    int minZ = lootRoomList[i - 1].minZ + roomSpacingZ * dirZ;
+                    int maxZ = minZ + Random.Range(minRoomSize, maxRoomSize);
+                    Room room = new Room(minX, maxX, minZ, maxZ);
+                    if (CanRoomFitInDungeon(room))
+                    {
+                        AddRoomToDungeon(room);
+                        lootRoomList.Add(room);
+                        debugCounter = 0;
+                    }
+                    else
+                    {
+                        i--;
+                        debugCounter++;
+                    }
+                    if (debugCounter > 40)
+                    {
+                        Debug.Log("Failed to generate loot path");
+                        return;
+                    }
+                }
+                else
+                {
+                    lootRoomList.Add(bossRoomList[i]);
+                }
+            }
+            for (int i = 1; i < secretPathLength; i++)
+            {
+                int rng = Random.Range(1, 4);
+                if (rng == 3 || secretPathSplit || i >= 4)
+                {
+                    secretPathSplit = true;
+                    int dirX = Random.Range(0, 2);
+                    int dirZ = 0;
+                    if (dirX == 0)
+                    {
+                        dirZ = Random.Range(0, 2) * 2 - 1;
+                    }
+                    if (dirX == 1)
+                    {
+                        dirX *= Random.Range(0, 2) * 2 - 1;
+                    }
+                    int minX = secretRoomList[i - 1].minX + roomSpacingX * dirX;
+                    int maxX = minX + Random.Range(minRoomSize, maxRoomSize);
+                    int minZ = secretRoomList[i - 1].minZ + roomSpacingZ * dirZ;
+                    int maxZ = minZ + Random.Range(minRoomSize, maxRoomSize);
+                    Room room = new Room(minX, maxX, minZ, maxZ);
+                    if (CanRoomFitInDungeon(room))
+                    {
+                        AddRoomToDungeon(room);
+                        secretRoomList.Add(room);
+                        debugCounter = 0;
+                    }
+                    else
+                    {
+                        i--;
+                        debugCounter++;
+                    }
+                    if (debugCounter > 40)
+                    {
+                        Debug.Log("Failed to generate secret path");
+                        ClearPath(secretRoomList);
+                        i = 1;
+                        debugCounter = 0;
+                    }
+                }
+                else
+                {
+                    secretRoomList.Add(bossRoomList[i]);
+                }
+            }
+            RemoveRoomFromDungeon(bossRoomList[0]);
+        }
+
+        private void ClearPath(List<Room> _list)
+        {
+            for(int i = 0; i < _list.Count; i++)
+            {
+                RemoveRoomFromDungeon(_list[i]);
+            }
+            _list.Clear();
+            _list.Add(bossRoomList[0]);
         }
 
         private void ConnectRooms()
         {
-            // [0, 1, 2, {3}, 4, 5] 0, 1, 2
-            for (int i = 0; i < roomList.Count; i++)
+            for (int i = 1; i < bossRoomList.Count; i++)
             {
-                Room room = roomList[i];
-                Room otherRoom = roomList[(i + Random.Range(1, roomList.Count)) % roomList.Count];
+                Room room = bossRoomList[i];
+                Room otherRoom = bossRoomList[i - 1];
                 ConnectRooms(room, otherRoom);
             }
+            for (int i = 1; i < lootRoomList.Count; i++)
+            {
+                Room room = lootRoomList[i];
+                Room otherRoom = lootRoomList[i - 1];
+                ConnectRooms(room, otherRoom);
+            }
+            for (int i = 1; i < secretRoomList.Count; i++)
+            {
+                Room room = secretRoomList[i];
+                Room otherRoom = secretRoomList[i - 1];
+                ConnectRooms(room, otherRoom);
+            }
+            
         }
         private void AllocateRooms()
         {
@@ -238,6 +337,17 @@ namespace SimpleDungeon
                 }
             }
             roomList.Add(room);
+        }
+
+        public void RemoveRoomFromDungeon(Room room)
+        {
+            for (int x = room.minX; x <= room.maxX; x++)
+            {
+                for (int z = room.minZ; z <= room.maxZ; z++)
+                {
+                    dungeon.Remove(new Vector3Int(x, 0, z));
+                }
+            }
         }
 
         public bool CanRoomFitInDungeon(Room room)
