@@ -108,20 +108,24 @@ namespace SimpleDungeon
         private void AllocatePathRooms()
         {
             for (int i = 1; i < bossPathLength; i++)
-            {
-                int dirX = Random.Range(-1, 2);
-                int dirZ = Random.Range(-1, 2);
+            { 
+                int dirX = Random.Range(0, 2) * 2 - 1;
+                int dirZ = Random.Range(0, 2) * 2 - 1;
                 int minX = Random.Range(bossRoomList[i - 1].minX + 20, bossRoomList[i - 1].minX + 25) * dirX;
-                int maxX = minX + Random.Range(minRoomSize, maxRoomSize);
+                int maxX = minX + Random.Range(minRoomSize, maxRoomSize) * dirX;
                 int minZ = Random.Range(bossRoomList[i - 1].minZ + 20, bossRoomList[i - 1].minZ + 25) * dirZ;
-                int maxZ = minZ + Random.Range(minRoomSize, maxRoomSize);
+                int maxZ = minZ + Random.Range(minRoomSize, maxRoomSize) * dirZ;
                 if(minX > maxX)
                 {
-                    (minX, maxX) = (maxX, minX);
+                    int swapX = minX;
+                    minX = maxX;
+                    maxX = swapX;
                 }
                 if(minZ > maxZ)
                 {
-                    (minZ, maxZ) = (maxZ, minZ);
+                    int swapZ = minZ;
+                    minZ = maxZ;
+                    maxZ = swapZ;
                 }
                 Room room = new Room(minX, maxX, minZ, maxZ);
                 if (CanRoomFitInDungeon(room))
