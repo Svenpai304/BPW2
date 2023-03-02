@@ -6,7 +6,7 @@ public class Item : MonoBehaviour
 {
     public event System.Action<Item> OnItemUse;
 
-    public Texture icon;
+    public Sprite icon;
     public void ItemUse()
     {
         OnItemUse?.Invoke(this);

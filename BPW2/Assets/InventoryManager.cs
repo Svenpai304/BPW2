@@ -1,21 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using static UnityEngine.InputSystem.InputAction;
 
 public class InventoryManager : MonoBehaviour
 {
     public List<UI_ItemSlot> slots = new List<UI_ItemSlot>();
     public UI_Item UI_ItemPrefab;
-    public event System.Action OnGrab;
+    public Item grabItem;
     void Awake()
     {
         GetComponentsInChildren<UI_ItemSlot>(slots);
-        OnGrab += GrabItem;
     }
 
+    [ContextMenu("Grab item")] 
     public void GrabItem()
     {
-        Item item = FindObjectOfType<Item>();
+        Item item = grabItem;
+        Debug.Log("Pickup");
         PickupItem(item);
     }
 

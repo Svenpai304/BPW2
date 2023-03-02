@@ -6,21 +6,21 @@ using UnityEngine.UI;
 
 public class UI_Item : MonoBehaviour
 {
-    public RawImage uiImage;
+    public Image uiImage;
     public Item itemRef;
     public UI_ItemSlot currentSlot;
 
     private void Awake()
     {
-        uiImage= GetComponent<RawImage>();
+        uiImage= GetComponent<Image>();
     }
 
     public void Setup(Item item)
     {
         itemRef = item;
-        itemRef.gameObject.SetActive(false);
-        uiImage.texture = itemRef.icon;
+        uiImage.sprite = itemRef.icon;
         itemRef.OnItemUse += OnHeldItemUse;
+        itemRef.gameObject.SetActive(false);
     }
 
     public void Use()

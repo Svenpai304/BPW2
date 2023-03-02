@@ -17,10 +17,10 @@ public class UI_ItemSlot : MonoBehaviour
         heldItem.Use();
     }
 
-    public void GetItem(UI_Item item)
+    public void GetItem(UI_Item uiItem)
     {
-        heldItem = item;
-        heldItem.transform.parent = transform;
+        heldItem = uiItem;
+        heldItem.transform.SetParent(transform);
         heldItem.transform.SetAsLastSibling();
         heldItem.transform.localPosition = Vector3.zero;
         heldItem.SetSlot(this);
