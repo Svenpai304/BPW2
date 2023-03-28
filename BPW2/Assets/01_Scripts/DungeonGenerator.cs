@@ -7,11 +7,16 @@ using Unity.VisualScripting;
 
 namespace SimpleDungeon
 {
-    public enum TileType { Floor, Wall }
+    public enum TileType { Floor, Wall, Trap }
     public class DungeonGenerator : MonoBehaviour
     {
         public GameObject floorPrefab;
         public GameObject wallPrefab;
+        public GameObject spawnerPrefab;
+        public GameObject playerPrefab;
+        public TurnController turnController;
+        public InputManager inputManager;
+        public InventoryManager inventoryManager;
         public int roomSizeX = 3;
         public int roomSizeZ = 9;
         public int roomSpacingX = 16;
@@ -49,6 +54,7 @@ namespace SimpleDungeon
             AllocatePathRooms();
             ConnectRooms();
             AllocateWalls();
+            SpawnPlayer();
             SpawnDungeon();
         }
         [ContextMenu("Clear Dungeon")]
@@ -70,7 +76,6 @@ namespace SimpleDungeon
             int startX = 0;
             int startY = 0;
             Room startRoom = new Room(startX, startX + roomSizeX, startY, startY + roomSizeZ);
-            AddRoomToDungeon(startRoom);
             bossRoomList.Add(startRoom);
             lootRoomList.Add(startRoom);
             secretRoomList.Add(startRoom);
@@ -233,7 +238,7 @@ namespace SimpleDungeon
             RemoveRoomFromDungeon(bossRoomList[0]);
             int startRoomOffsetX = (roomSizeX - startRoomSizeX) / 2;
             int startRoomOffsetZ = (roomSizeZ - startRoomSizeZ) / 2;
-            Room trueStartRoom = new Room(startRoomOffsetX, startRoomOffsetX + startRoomSizeX, startRoomOffsetZ, startRoomOffsetZ + startRoomSizeZ);
+            Room trueStartRoom = new StartRoom(startRoomOffsetX, startRoomOffsetX + startRoomSizeX, startRoomOffsetZ, startRoomOffsetZ + startRoomSizeZ);
             roomList[0] = trueStartRoom;
             bossRoomList[0] = trueStartRoom;
             lootRoomList[0] = trueStartRoom;
@@ -344,6 +349,13 @@ namespace SimpleDungeon
                     dungeon.Add(new Vector3Int(x, 0, z), TileType.Floor);
                 }
             }
+            if (room.GetType() == typeof(Room))
+            {
+                GameObject obj = Instantiate(spawnerPrefab, room.GetCenter(), Quaternion.identity, transform);
+                EnemySpawner es = obj.GetComponent<EnemySpawner>();
+                es.dungeon = this;
+                es.turnController = turnController;
+            }
             roomList.Add(room);
         }
 
@@ -372,6 +384,28 @@ namespace SimpleDungeon
             }
             return true;
         }
+
+        public void SpawnPlayer()
+        {
+            PlayerActions pa = Instantiate(playerPrefab, roomList[0].GetCenter(), Quaternion.identity).GetComponent<PlayerActions>();
+            turnController.playerActions = pa;
+            inputManager.playerActions = pa;
+            pa.turnController = turnController;
+            pa.inventoryManager = inventoryManager;
+            pa.dungeon = this;
+        }
+
+        public bool IsTileWalkable(Vector3Int tile)
+        {
+            if (dungeon[tile] == TileType.Floor)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
     public class Room
     {
@@ -390,6 +424,28 @@ namespace SimpleDungeon
         public Vector3Int GetRandomPositionInRoom()
         {
             return new Vector3Int(Random.Range(minX, maxX + 1), 0, Random.Range(minZ, maxZ + 1));
+        }
+    }
+
+    public class StartRoom : Room
+    {
+        public StartRoom(int _minX, int _maxX, int _minZ, int _maxZ) : base(_minX, _maxX, _minZ, _maxZ)
+        {
+            minX = _minX;
+            maxX = _maxX;
+            minZ = _minZ;
+            maxZ = _maxZ;
+        }
+    }
+
+    public class BossRoom : Room
+    {
+        public BossRoom(int _minX, int _maxX, int _minZ, int _maxZ) : base(_minX, _maxX, _minZ, _maxZ)
+        {
+            minX = _minX;
+            maxX = _maxX;
+            minZ = _minZ;
+            maxZ = _maxZ;
         }
     }
 }
