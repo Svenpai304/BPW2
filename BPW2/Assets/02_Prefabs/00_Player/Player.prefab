@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2890098970558079330}
   - component: {fileID: 2890098970558079331}
+  - component: {fileID: 3930474894126545362}
+  - component: {fileID: 3040658354872600717}
   - component: {fileID: 2890098970558079335}
   - component: {fileID: 2890098970558079328}
   m_Layer: 0
@@ -52,12 +54,44 @@ MonoBehaviour:
   - {x: -1, y: 0, z: 0}
   - {x: 1, y: 0, z: 0}
   - {x: 0, y: 0, z: -1}
+  direction: {x: 0, y: 0, z: 0}
   playerModel: {fileID: 4570922039289148255}
   playerTurn: 0
   dungeon: {fileID: 0}
   turnController: {fileID: 0}
   inventoryManager: {fileID: 0}
   activeSlot: {fileID: 0}
+--- !u!114 &3930474894126545362
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2890098970558079334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81d86df57dd6e0f48ad8769be35b7a92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 10
+  maxHealth: 10
+  onDamageEffects: []
+  onHealEffects: []
+  actions: {fileID: 2890098970558079331}
+--- !u!114 &3040658354872600717
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2890098970558079334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66af0f02d8953a747be742186bd261ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pa: {fileID: 2890098970558079331}
+  ps: {fileID: 3930474894126545362}
 --- !u!65 &2890098970558079335
 BoxCollider:
   m_ObjectHideFlags: 0

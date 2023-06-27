@@ -1,12 +1,8 @@
 
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using Unity.VisualScripting;
 using System;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 
 namespace SimpleDungeon
 {
@@ -22,6 +18,7 @@ namespace SimpleDungeon
         public TurnController turnController;
         public InputManager inputManager;
         public InventoryManager inventoryManager;
+        public List<Type> standardRooms = new() { typeof(Room), typeof(SpikeCircleRoom), typeof(SpikeCrossRoom) };
         public int roomSizeX = 3;
         public int roomSizeZ = 9;
         public int roomSpacingX = 16;
@@ -38,12 +35,13 @@ namespace SimpleDungeon
         private int lootPathLength = 0;
         private int secretPathLength = 0;
         public Dictionary<Vector3Int, TileType> dungeon = new Dictionary<Vector3Int, TileType>();
-        private Type[] standardRooms = new Type[3] { typeof(Room), typeof(SpikeCircleRoom), typeof(SpikeCrossRoom) };
         public List<Room> roomList = new List<Room>();
         public List<Room> bossRoomList = new List<Room>();
         public List<Room> lootRoomList = new List<Room>();
         public List<Room> secretRoomList = new List<Room>();
         public List<GameObject> allInstantiatedPrefabs = new List<GameObject>();
+
+        
         void Start()
         {
             Generate();
@@ -55,8 +53,8 @@ namespace SimpleDungeon
         public void Generate()
         {
             Debug.Log("Start Generating");
-            allInstantiatedPrefabs.Clear();
             ClearDungeon();
+            allInstantiatedPrefabs.Clear();
             GenerateStart();
             AllocatePathRooms();
             AllocateEndRoom();
@@ -137,18 +135,10 @@ namespace SimpleDungeon
                     int minZ = mainList[i - 1].minZ + roomSpacingZ * dirZ;
                     int maxZ = minZ + roomSizeZ;
 
-                    int roomType = UnityEngine.Random.Range(0, standardRooms.Length + 1);
-                    Room room;
-                    switch (roomType)
-                    {
-                        default:
-                            room = new Room(minX, maxX, minZ, maxZ, i); break;
-                        case 1:
-                            room = new SpikeCircleRoom(minX, maxX, minZ, maxZ, i); break;
-                        case 2:
-                            room = new SpikeCrossRoom(minX, maxX, minZ, maxZ, i); break;
+                    Type roomType = standardRooms[UnityEngine.Random.Range(0, standardRooms.Count)];
+                    Room room = Activator.CreateInstance(roomType, minX, maxX, minZ, maxZ, i) as Room;
 
-                    }
+
                     if (CanRoomFitInDungeon(room))
                     {
                         AddRoomToDungeon(room);
@@ -313,6 +303,7 @@ namespace SimpleDungeon
                 es.dungeon = this;
                 es.turnController = turnController;
                 es.roomIndex = room.index;
+                allInstantiatedPrefabs.Add(obj);
             }
             roomList.Add(room);
         }
@@ -403,6 +394,8 @@ namespace SimpleDungeon
             index = _index;
         }
 
+        public Room() { }
+
         public virtual void SpawnTiles(DungeonGenerator dungeonGenerator)
         {
             for (int x = minX; x <= maxX; x++)
@@ -424,6 +417,15 @@ namespace SimpleDungeon
         }
     }
 
+    public class RoomType
+    {
+        public Type type;
+        public RoomType(Type _type) 
+        {
+            type = _type;
+        }
+    }
+
     public class StartRoom : Room
     {
         public StartRoom(int _minX, int _maxX, int _minZ, int _maxZ, int _index) : base(_minX, _maxX, _minZ, _maxZ, _index)
@@ -434,6 +436,7 @@ namespace SimpleDungeon
             maxZ = _maxZ;
             index = _index;
         }
+        public StartRoom() { }
     }
 
     public class BossRoom : Room
@@ -447,10 +450,12 @@ namespace SimpleDungeon
             index = _index;
         }
 
+        public BossRoom() { }
+
         public override void SpawnTiles(DungeonGenerator dungeonGenerator)
         {
             base.SpawnTiles(dungeonGenerator);
-            dungeonGenerator.dungeon[new Vector3Int(minX + ((maxX - minX) / 2), 0, minZ + ((maxZ - minZ) / 2))] = TileType.Victory;
+            dungeonGenerator.dungeon[this.GetCenter()] = TileType.Victory;
         }
 
     }
@@ -464,6 +469,8 @@ namespace SimpleDungeon
             maxZ = _maxZ;
             index = _index;
         }
+        public SpikeCircleRoom() { }
+
         public override void SpawnTiles(DungeonGenerator dungeonGenerator)
         {
             int o = 1;
@@ -494,6 +501,7 @@ namespace SimpleDungeon
             maxZ = _maxZ;
             index = _index;
         }
+        public SpikeCrossRoom() { }
         public override void SpawnTiles(DungeonGenerator dungeonGenerator)
         {
             int ox = 2;
