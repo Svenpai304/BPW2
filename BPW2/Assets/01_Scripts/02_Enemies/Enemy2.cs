@@ -13,7 +13,7 @@ public class Enemy2 : EnemyController
         playerPosition = _playerPosition;
         if (currentCooldown == 0)
         {
-            if (Vector3.Distance(transform.position, playerPosition) < attackDistance)
+            if (Vector3.Distance(transform.position, playerPosition) < attackDistance || !CheckAxisAligned())
             {
                 Move();
             }
@@ -34,14 +34,27 @@ public class Enemy2 : EnemyController
     {
         Vector3 chosenOption = Vector3.zero;
         float optionDistance = 0;
+        float optionAxisDistance = Mathf.Infinity;
         for (int i = 0; i < movementOptions.Length; i++)
         {
             Vector3 option = movementOptions[i] + transform.position;
             Vector3Int optionTile = new Vector3Int((int)option.x, 0, (int)option.z);
-            if (dungeon.IsTileWalkable(optionTile) && Vector3.Distance(option, playerPosition) > optionDistance)
+            float xDistance = Mathf.Abs(option.x - playerPosition.x);
+            float yDistance = Mathf.Abs(option.y - playerPosition.y);
+            float axisDistance = xDistance;
+            if (yDistance < axisDistance) 
+            { 
+                axisDistance = yDistance; 
+            }
+
+            if (dungeon.IsTileWalkable(optionTile))
             {
-                optionDistance = Vector3.Distance(option, playerPosition);
-                chosenOption = movementOptions[i];
+                if (axisDistance < optionAxisDistance || (axisDistance == optionAxisDistance && Vector3.Distance(option, playerPosition) > optionDistance))
+                {
+                    optionDistance = Vector3.Distance(option, playerPosition);
+                    optionAxisDistance = axisDistance;
+                    chosenOption = movementOptions[i];
+                }
             }
         }
         if (chosenOption != Vector3.zero)
@@ -49,5 +62,12 @@ public class Enemy2 : EnemyController
             transform.Translate(chosenOption);
             currentCooldown = movementCooldown;
         }
+    }
+
+    public bool CheckAxisAligned()
+    {
+        if (playerPosition.x == transform.position.x || playerPosition.z == transform.position.z)
+            return true;
+        else return false;
     }
 }

@@ -12,17 +12,21 @@ public class PlayerActions : MonoBehaviour
     public Transform playerModel;
 
     public bool playerTurn = false;
+    public bool attackUIOn = false;
     public DungeonGenerator dungeon;
     public TurnController turnController;
     public InventoryManager inventoryManager;
     public UI_ItemSlot activeSlot;
+    public AttackUI attackUI;
 
     private void Start()
     {
+        inventoryManager.playerActions = this;
         SetActiveSlot(1);
     }
     public void SetActiveSlot(int slot)
     {
+        DisableAttackUI();
         activeSlot = inventoryManager.slots[slot - 1];
         inventoryManager.SetActiveSlot(activeSlot);
     }
@@ -47,8 +51,21 @@ public class PlayerActions : MonoBehaviour
                 chosenTile = optionTile;
             }
         }
-        playerModel.rotation = Quaternion.Euler(new Vector3(0, Vector3.SignedAngle(Vector3.forward, chosenOption, Vector3.up), 0));
+        
+
+        if (attackUIOn)
+        {
+            if (activeSlot.heldItem.itemRef.itemUseType == Item.ItemUseType.Orthogonal)
+            {
+                direction = chosenOption; 
+                playerModel.rotation = Quaternion.Euler(0, Vector3.SignedAngle(Vector3.forward, direction, Vector3.up), 0);
+            }
+            else direction = Vector3.zero;
+            UseDirectionalItem();
+            return;
+        }
         direction = chosenOption;
+        playerModel.rotation = Quaternion.Euler(0, Vector3.SignedAngle(Vector3.forward, direction, Vector3.up), 0);
         if (chosenOption != Vector3.zero && dungeon.IsTilePlayerWalkable(chosenTile))
         {
             transform.Translate(chosenOption);
@@ -60,11 +77,43 @@ public class PlayerActions : MonoBehaviour
     public void UseItem()
     {
         if (!playerTurn) { return; }
-        if (activeSlot.heldItem != null)
+        if (activeSlot.heldItem == null) { return; }
+        if (attackUIOn)
         {
-            activeSlot.UseItem();
-            turnController.currentTurn = TurnController.Turn.Enemy;
+            DisableAttackUI();
+            return;
         }
+
+        switch (activeSlot.heldItem.itemRef.itemUseType)
+        {
+            case Item.ItemUseType.None: 
+                activeSlot.UseItem();
+                turnController.currentTurn = TurnController.Turn.Enemy; break;
+            case Item.ItemUseType.Orthogonal:
+                attackUI.SetAttackUI(Item.ItemUseType.Orthogonal);
+                attackUIOn = true;
+                break;
+            case Item.ItemUseType.Self:
+                attackUI.SetAttackUI(Item.ItemUseType.Self);
+                attackUIOn = true; break;
+        }
+    }
+
+    public void UseDirectionalItem()
+    {
+        if (direction != Vector3.zero)
+        {
+            playerModel.rotation = Quaternion.Euler(new Vector3(0, Vector3.SignedAngle(Vector3.forward, direction, Vector3.up), 0));
+        }
+        DisableAttackUI();
+        activeSlot.UseItem();
+        turnController.currentTurn = TurnController.Turn.Enemy;
+    }
+
+    public void DisableAttackUI()
+    {
+        attackUI.SetAttackUI(Item.ItemUseType.None);
+        attackUIOn = false;
     }
 
     public void DropItem()

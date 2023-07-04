@@ -8,6 +8,7 @@ public class InventoryManager : MonoBehaviour
     public float inactiveAlpha = 0.6f;
     public float activeAlpha = 0.8f;
 
+    [HideInInspector] public PlayerActions playerActions;
     public List<UI_ItemSlot> slots = new List<UI_ItemSlot>();
     public List<Image> slotImages = new List<Image>();
     public UI_Item UI_ItemPrefab;
@@ -20,6 +21,18 @@ public class InventoryManager : MonoBehaviour
         foreach(UI_ItemSlot slot in slots)
         {
             slotImages.Add(slot.GetComponent<Image>());
+        }
+    }
+
+    public void SetUseSlot(int slot)
+    {
+        if (playerActions != null)
+        {
+            playerActions.SetActiveSlot(slot);
+            if (playerActions.playerTurn)
+            {
+                playerActions.UseItem();
+            }
         }
     }
 

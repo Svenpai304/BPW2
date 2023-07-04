@@ -20,6 +20,7 @@ public class UI_Item : MonoBehaviour
         itemRef = item;
         uiImage.sprite = itemRef.icon;
         itemRef.OnItemUse += OnHeldItemUse;
+        itemRef.uiItem = this;
         itemRef.gameObject.SetActive(false);
     }
 
@@ -36,7 +37,15 @@ public class UI_Item : MonoBehaviour
     public void DropItem(Vector3 dropPosition)
     {
         itemRef.gameObject.SetActive(true);
+        itemRef.uiItem = null;
         itemRef.transform.position = dropPosition;
+        currentSlot.ReleaseItem();
+        currentSlot = null;
+    }
+
+    public void DestroyItem()
+    {
+        Destroy(itemRef.gameObject);
         currentSlot.ReleaseItem();
         currentSlot = null;
     }

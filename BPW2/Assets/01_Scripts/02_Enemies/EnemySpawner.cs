@@ -63,7 +63,9 @@ public class EnemySpawner : MonoBehaviour
                     doneEnemySpawns.Add(Instantiate(enemySpawns[i]).GetComponent<EnemyController>());
                     doneEnemySpawns[i].transform.position = position;
                     doneEnemySpawns[i].playerPosition = playerPosition;
+                    doneEnemySpawns[i].spawner = this;
                     doneEnemySpawns[i].dungeon = dungeon;
+                    doneEnemySpawns[i].turnController = turnController;
                     turnController.enemyControllers.Add(doneEnemySpawns[i]);
                 }
                 else
