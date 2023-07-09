@@ -56,9 +56,10 @@ public class EnemySpawner : MonoBehaviour
             Vector3Int position = Vector3Int.zero;
             position.x = (int)transform.position.x + UnityEngine.Random.Range(minX, maxX);
             position.z = (int)transform.position.z + UnityEngine.Random.Range(minZ, maxZ);
+            List<Vector3> takenPositions = new List<Vector3>();
             if (dungeon.dungeon.ContainsKey(position)) 
             {
-                if (dungeon.IsTileWalkable(position))
+                if (dungeon.IsTileWalkable(position) && !takenPositions.Contains(position))
                 {
                     doneEnemySpawns.Add(Instantiate(enemySpawns[i]).GetComponent<EnemyController>());
                     doneEnemySpawns[i].transform.position = position;
@@ -67,6 +68,7 @@ public class EnemySpawner : MonoBehaviour
                     doneEnemySpawns[i].dungeon = dungeon;
                     doneEnemySpawns[i].turnController = turnController;
                     turnController.enemyControllers.Add(doneEnemySpawns[i]);
+                    takenPositions.Add(position);
                 }
                 else
                 {

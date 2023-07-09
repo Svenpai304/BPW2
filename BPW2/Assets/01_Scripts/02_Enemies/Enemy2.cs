@@ -32,6 +32,7 @@ public class Enemy2 : EnemyController
     }
     public override void Move()
     {
+        base.Move();
         Vector3 chosenOption = Vector3.zero;
         float optionDistance = 0;
         float optionAxisDistance = Mathf.Infinity;
@@ -40,16 +41,25 @@ public class Enemy2 : EnemyController
             Vector3 option = movementOptions[i] + transform.position;
             Vector3Int optionTile = new Vector3Int((int)option.x, 0, (int)option.z);
             float xDistance = Mathf.Abs(option.x - playerPosition.x);
-            float yDistance = Mathf.Abs(option.y - playerPosition.y);
+            float zDistance = Mathf.Abs(option.y - playerPosition.y);
             float axisDistance = xDistance;
-            if (yDistance < axisDistance) 
+            if (zDistance < axisDistance) 
             { 
-                axisDistance = yDistance; 
+                axisDistance = zDistance; 
+            }
+            RaycastHit[] hits = Physics.RaycastAll(option + Vector3.up * 5, Vector3.down, 10);
+            bool tileClear = true;
+            foreach (RaycastHit hit in hits)
+            {
+                if (hit.collider != null)
+                {
+                    if ((hit.collider.GetComponent<EnemyController>() != null && hit.collider.gameObject != this.gameObject) || hit.collider.GetComponent<PlayerActions>() != null)  { tileClear = false; }
+                }
             }
 
-            if (dungeon.IsTileWalkable(optionTile))
+            if (dungeon.IsTileWalkable(optionTile) && tileClear)
             {
-                if (axisDistance < optionAxisDistance || (axisDistance == optionAxisDistance && Vector3.Distance(option, playerPosition) > optionDistance))
+                if (axisDistance <= optionAxisDistance)
                 {
                     optionDistance = Vector3.Distance(option, playerPosition);
                     optionAxisDistance = axisDistance;

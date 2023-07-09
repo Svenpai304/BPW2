@@ -12,9 +12,11 @@ public class PlayerStatus : MonoBehaviour
     public List<OnDeathEffect> onDeathEffects;
 
     public PlayerActions actions;
+    public HealthBar healthBar;
     void Start()
     {
         health = maxHealth;
+        UpdateHealthBar();
     }
 
     public void TakeDamage(int damage)
@@ -28,6 +30,7 @@ public class PlayerStatus : MonoBehaviour
         }
         health -= damage;
         health = Mathf.Clamp(health, 0, maxHealth);
+        UpdateHealthBar();
         if (health == 0)
         {
             Die();
@@ -45,6 +48,21 @@ public class PlayerStatus : MonoBehaviour
         }
         health += heal;
         health = Mathf.Clamp(health, 0, maxHealth);
+        UpdateHealthBar();
+    }
+
+    public void ChangeMaxHealth(int newMax)
+    {
+        healthBar.UpdateBarMaxValue(newMax/maxHealth);
+        maxHealth = newMax;
+        health = Mathf.Clamp(health, 0, maxHealth);
+        UpdateHealthBar();
+    }
+
+    public void UpdateHealthBar()
+    {
+        float barValue = (float)health / (float)maxHealth;
+        healthBar.UpdateBarValue(barValue);
     }
 
     public void Die()

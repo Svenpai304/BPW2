@@ -641,11 +641,13 @@ MonoBehaviour:
   wallPrefab: {fileID: 4892212704892765690, guid: 39e2fd36d86ceba41bbfb055c36bc914, type: 3}
   trapPrefab: {fileID: 9037705590055375026, guid: 33dfb350b5cd1a545b5f06b8fd1e90c0, type: 3}
   victoryPrefab: {fileID: 9037705590055375026, guid: dbda2058c493b8d4393d453df84bec1d, type: 3}
+  lootPrefab: {fileID: 8757272987169081763, guid: 554065f305f69c74fa574f61b279a51c, type: 3}
   spawnerPrefab: {fileID: 9037705590055375026, guid: 317c2588d7d59cc4aac6c7b8114b2cdf, type: 3}
   playerPrefab: {fileID: 2890098970558079334, guid: 83c764a0daa911746a879038ab5ef846, type: 3}
   turnController: {fileID: 501449724}
   inputManager: {fileID: 522462296}
   inventoryManager: {fileID: 1949664014}
+  healthBar: {fileID: 1288537118}
   roomSizeX: 8
   roomSizeZ: 6
   roomSpacingX: 12
@@ -1648,6 +1650,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 0}
 --- !u!4 &1112365473
 Transform:
   m_ObjectHideFlags: 0
@@ -1663,6 +1666,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1288537118 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8242702828079740488, guid: 7e8e73b28d7f5f6498fb50c2b59ebe3c, type: 3}
+  m_PrefabInstance: {fileID: 3543966198992454579}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69506b3f9488f4a4fbd308011837045a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1949664014 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3543966199326589117, guid: 7e8e73b28d7f5f6498fb50c2b59ebe3c, type: 3}
@@ -1781,6 +1795,14 @@ PrefabInstance:
     - target: {fileID: 2488778715836381273, guid: 454e67c9d37c55141a5244d0ebaf7f31, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2488778715836381274, guid: 454e67c9d37c55141a5244d0ebaf7f31, type: 3}
+      propertyPath: hoverName
+      value: Punchy Punch
+      objectReference: {fileID: 0}
+    - target: {fileID: 2488778715836381274, guid: 454e67c9d37c55141a5244d0ebaf7f31, type: 3}
+      propertyPath: hoverText
+      value: Strike enemies with this powerful but short-ranged attack.
       objectReference: {fileID: 0}
     - target: {fileID: 2488778715836381276, guid: 454e67c9d37c55141a5244d0ebaf7f31, type: 3}
       propertyPath: m_Name
@@ -1933,3 +1955,60 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7e8e73b28d7f5f6498fb50c2b59ebe3c, type: 3}
+--- !u!1001 &5484311041535011732
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4489589439144182248, guid: 0e61631d92a914340bef166d2334aa31, type: 3}
+      propertyPath: m_RootOrder
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 4489589439144182248, guid: 0e61631d92a914340bef166d2334aa31, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4489589439144182248, guid: 0e61631d92a914340bef166d2334aa31, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4489589439144182248, guid: 0e61631d92a914340bef166d2334aa31, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4489589439144182248, guid: 0e61631d92a914340bef166d2334aa31, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4489589439144182248, guid: 0e61631d92a914340bef166d2334aa31, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4489589439144182248, guid: 0e61631d92a914340bef166d2334aa31, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4489589439144182248, guid: 0e61631d92a914340bef166d2334aa31, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4489589439144182248, guid: 0e61631d92a914340bef166d2334aa31, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4489589439144182248, guid: 0e61631d92a914340bef166d2334aa31, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4489589439144182248, guid: 0e61631d92a914340bef166d2334aa31, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4489589439144182253, guid: 0e61631d92a914340bef166d2334aa31, type: 3}
+      propertyPath: m_Name
+      value: ItemGoblinSword
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 0e61631d92a914340bef166d2334aa31, type: 3}

@@ -113,5 +113,5 @@ MonoBehaviour:
   status: {fileID: 0}
   actions: {fileID: 0}
   turnController: {fileID: 0}
-  damage: 10
+  damage: 5
   duration: 1

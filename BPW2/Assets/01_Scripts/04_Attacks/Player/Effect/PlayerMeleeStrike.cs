@@ -11,6 +11,7 @@ public class PlayerMeleeStrike : PlayerAttack
     {
         base.Awake();
         transform.Translate(actions.transform.position + actions.direction.normalized);
+        transform.Rotate(new Vector3(0, Vector3.SignedAngle(Vector3.forward, actions.direction, Vector3.up), 0));
     }
 
     private void OnTriggerEnter(Collider other)

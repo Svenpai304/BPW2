@@ -42,7 +42,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4486512504606778724}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: -8646925073611312305, guid: 74b47d054fde4fbe60b052997ceed319, type: 3}
 --- !u!23 &4486512504606778727
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -63,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 6a936d0746b4e394085b4f401e906ab0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -117,6 +117,6 @@ MonoBehaviour:
   itemUseType: 2
   hoverName: Potion
   hoverText: A flask of viscous liquid, slightly glowing. Use to heal.
-  icon: {fileID: 21300000, guid: f9161c6c9e06dc445ada3ee16d991f90, type: 3}
+  icon: {fileID: 422217892, guid: 4be2b2d44d250ee42b80cd311728b13a, type: 3}
   uiItem: {fileID: 0}
   healOnUse: 3

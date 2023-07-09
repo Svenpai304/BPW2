@@ -19,6 +19,9 @@ public class PlayerActions : MonoBehaviour
     public UI_ItemSlot activeSlot;
     public AttackUI attackUI;
 
+    public ParticleSystem moveParticles;
+    public ParticleSystem attackParticles;
+
     private void Start()
     {
         inventoryManager.playerActions = this;
@@ -64,11 +67,29 @@ public class PlayerActions : MonoBehaviour
             UseDirectionalItem();
             return;
         }
-        direction = chosenOption;
+
+        direction = chosenOption.normalized;
         playerModel.rotation = Quaternion.Euler(0, Vector3.SignedAngle(Vector3.forward, direction, Vector3.up), 0);
-        if (chosenOption != Vector3.zero && dungeon.IsTilePlayerWalkable(chosenTile))
+
+        RaycastHit[] hits = Physics.RaycastAll(transform.position + chosenOption + Vector3.up * 5, Vector3.down, 10);
+        Debug.DrawRay(transform.position + chosenOption + Vector3.up * 3, Vector3.down, Color.green, 2);
+        bool tileClear = true;
+        foreach (RaycastHit hit in hits)
         {
-            transform.Translate(chosenOption);
+            if (hit.collider != null)
+            {
+                if (hit.collider.GetComponent<EnemyController>() != null) { tileClear = false; break; }
+            }
+        }
+        if (chosenOption != Vector3.zero && dungeon.IsTilePlayerWalkable(chosenTile) && tileClear)
+        {
+            transform.Translate(chosenOption); 
+            if (moveParticles != null)
+            {
+                moveParticles.Stop();
+                moveParticles.Clear();
+                moveParticles.Play();
+            }
         }
 
         turnController.currentTurn = TurnController.Turn.Enemy;
@@ -107,6 +128,12 @@ public class PlayerActions : MonoBehaviour
         }
         DisableAttackUI();
         activeSlot.UseItem();
+        if (attackParticles != null)
+        {
+            attackParticles.Stop();
+            attackParticles.Clear();
+            attackParticles.Play();
+        }
         turnController.currentTurn = TurnController.Turn.Enemy;
     }
 

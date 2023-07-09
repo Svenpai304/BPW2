@@ -13,6 +13,10 @@ public class EnemyController : MonoBehaviour
     public TurnController turnController;
     public Vector3 playerPosition;
 
+    public LootSpawner lootSpawner;
+    public ParticleSystem moveParticles;
+    public ParticleSystem attackParticles;
+
     public virtual void Start()
     {
         health = maxHealth;
@@ -33,7 +37,12 @@ public class EnemyController : MonoBehaviour
 
     public virtual void Move()
     {
-
+        if (moveParticles != null)
+        {
+            moveParticles.Stop();
+            moveParticles.Clear();
+            moveParticles.Play();
+        }
     }
 
     public virtual void Attack()
@@ -49,6 +58,12 @@ public class EnemyController : MonoBehaviour
             ea.turnController = turnController;
             turnController.enemyAttacks.Add(ea);
         }
+        if (attackParticles != null)
+        {
+            attackParticles.Stop();
+            attackParticles.Clear();
+            attackParticles.Play();
+        }
     }
 
     public virtual void TakeDamage(int damage)
@@ -57,8 +72,17 @@ public class EnemyController : MonoBehaviour
         Mathf.Clamp(health, 0, maxHealth);
     }
 
+    public virtual void TakeKnockback(Vector3 translation)
+    {
+        transform.Translate(translation);
+    }
+
     public virtual void Die()
     {
+        if(lootSpawner != null)
+        {
+            Instantiate(lootSpawner, transform.position, Quaternion.identity);
+        }
         spawner.RemoveEnemy(this);
         Destroy(gameObject);
     }
