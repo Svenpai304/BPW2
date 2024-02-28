@@ -108,7 +108,7 @@ GameObject:
   - component: {fileID: 2488778715836381278}
   - component: {fileID: 2488778715836381274}
   m_Layer: 0
-  m_Name: ItemMeleeStrike
+  m_Name: ItemStartSword
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -53,7 +53,7 @@ public class PlayerStatus : MonoBehaviour
 
     public void ChangeMaxHealth(int newMax)
     {
-        healthBar.UpdateBarMaxValue(newMax/maxHealth);
+        healthBar.UpdateBarMaxValue((float)newMax / (float)maxHealth);
         maxHealth = newMax;
         health = Mathf.Clamp(health, 0, maxHealth);
         UpdateHealthBar();

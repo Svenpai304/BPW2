@@ -7,6 +7,8 @@ public class Item : MonoBehaviour
 {
     public event System.Action<Item> OnItemUse;
     public UnityEvent effects;
+    public PlayerActions playerActions;
+    public PlayerStatus playerStatus;
     public enum ItemType { Active, Passive }
     public enum ItemUseType { None, Orthogonal, Self }
     public ItemType itemType;
@@ -22,13 +24,22 @@ public class Item : MonoBehaviour
         OnItemUse?.Invoke(this);
         effects?.Invoke();
     }
+    public virtual void OnItemAdd()
+    {
 
+    }
+    public virtual void OnItemRelease()
+    {
+        playerActions = null;
+        playerStatus = null;
+    }
     public virtual void OnTriggerEnter(Collider other)
     {
-        PlayerActions pa = other.GetComponent<PlayerActions>();
-        if(pa != null)
+        playerActions = other.GetComponent<PlayerActions>();
+        if(playerActions != null)
         {
-            pa.inventoryManager.PickupItem(this);
+            playerStatus = other.GetComponent<PlayerStatus>();
+            playerActions.inventoryManager.PickupItem(this);
         }
     }
 }

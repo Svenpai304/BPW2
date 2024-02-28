@@ -13,7 +13,7 @@ public class Enemy2 : EnemyController
         playerPosition = _playerPosition;
         if (currentCooldown == 0)
         {
-            if (Vector3.Distance(transform.position, playerPosition) < attackDistance || !CheckAxisAligned())
+            if (Vector3.Distance(transform.position, playerPosition) < attackDistance || CheckAxisAligned() > 1)
             {
                 Move();
             }
@@ -41,7 +41,7 @@ public class Enemy2 : EnemyController
             Vector3 option = movementOptions[i] + transform.position;
             Vector3Int optionTile = new Vector3Int((int)option.x, 0, (int)option.z);
             float xDistance = Mathf.Abs(option.x - playerPosition.x);
-            float zDistance = Mathf.Abs(option.y - playerPosition.y);
+            float zDistance = Mathf.Abs(option.z - playerPosition.z);
             float axisDistance = xDistance;
             if (zDistance < axisDistance) 
             { 
@@ -74,10 +74,15 @@ public class Enemy2 : EnemyController
         }
     }
 
-    public bool CheckAxisAligned()
+    public float CheckAxisAligned()
     {
-        if (playerPosition.x == transform.position.x || playerPosition.z == transform.position.z)
-            return true;
-        else return false;
+        float xDistance = Mathf.Abs(transform.position.x - playerPosition.x);
+        float zDistance = Mathf.Abs(transform.position.z - playerPosition.z);
+        float axisDistance = xDistance;
+        if (zDistance < axisDistance)
+        {
+            axisDistance = zDistance;
+        }
+        return axisDistance;
     }
 }

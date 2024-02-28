@@ -9,8 +9,8 @@ public class TrapTile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        PlayerStatus playerStatus = GetComponent<PlayerStatus>();
-        EnemyController enemyController = GetComponent<EnemyController>();
+        PlayerStatus playerStatus = other.GetComponent<PlayerStatus>();
+        EnemyController enemyController = other.GetComponent<EnemyController>();
         if (playerStatus != null)
         {
             playerStatus.TakeDamage(playerDamage);

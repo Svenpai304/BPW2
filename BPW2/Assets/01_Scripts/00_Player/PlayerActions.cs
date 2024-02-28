@@ -17,6 +17,7 @@ public class PlayerActions : MonoBehaviour
     public TurnController turnController;
     public InventoryManager inventoryManager;
     public UI_ItemSlot activeSlot;
+    public int activeSlotNumber;
     public AttackUI attackUI;
 
     public ParticleSystem moveParticles;
@@ -31,6 +32,7 @@ public class PlayerActions : MonoBehaviour
     {
         DisableAttackUI();
         activeSlot = inventoryManager.slots[slot - 1];
+        activeSlotNumber = slot;
         inventoryManager.SetActiveSlot(activeSlot);
     }
 
@@ -72,7 +74,6 @@ public class PlayerActions : MonoBehaviour
         playerModel.rotation = Quaternion.Euler(0, Vector3.SignedAngle(Vector3.forward, direction, Vector3.up), 0);
 
         RaycastHit[] hits = Physics.RaycastAll(transform.position + chosenOption + Vector3.up * 5, Vector3.down, 10);
-        Debug.DrawRay(transform.position + chosenOption + Vector3.up * 3, Vector3.down, Color.green, 2);
         bool tileClear = true;
         foreach (RaycastHit hit in hits)
         {
@@ -152,5 +153,16 @@ public class PlayerActions : MonoBehaviour
         }
     }
 
-    
+    public void DropPassiveItem()
+    {
+        if (!playerTurn) { return; }
+
+        UI_ItemSlot passiveSlot = inventoryManager.slots[activeSlotNumber + 2];
+        if (passiveSlot.heldItem != null)
+        {
+            passiveSlot.heldItem.DropItem(transform.position + direction);
+        }
+    }
+
+
 }

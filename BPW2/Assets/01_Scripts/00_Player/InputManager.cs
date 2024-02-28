@@ -20,6 +20,12 @@ public class InputManager : MonoBehaviour
         if (context.started)
             playerActions.DropItem();
     }
+
+    public void OnDropPassive(InputAction.CallbackContext context)
+    {
+        if (context.started)
+            playerActions.DropPassiveItem();
+    }
     public void OnSelectSlot1(InputAction.CallbackContext context)
     {
         if (context.started)

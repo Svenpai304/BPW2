@@ -53,7 +53,7 @@ namespace SimpleDungeon
         /// Generates the dungeon
         /// </summary>
         [ContextMenu("Generate Dungeon")]
-        public void Generate()
+        public virtual void Generate()
         {
             Debug.Log("Start Generating");
             ClearDungeon();
@@ -80,7 +80,7 @@ namespace SimpleDungeon
             secretRoomList.Clear();
         }
 
-        private void GenerateStart()
+        protected void GenerateStart()
         {
             int startX = 0;
             int startY = 0;
@@ -94,7 +94,7 @@ namespace SimpleDungeon
             secretPathLength = UnityEngine.Random.Range(secretPathMinLength, secretPathMaxLength);
         }
 
-        private void AllocatePathRooms()
+        protected void AllocatePathRooms()
         {
 
             AllocateSinglePath(bossRoomList, null, bossPathLength, 0);
@@ -112,7 +112,7 @@ namespace SimpleDungeon
             AddRoomToDungeon(trueStartRoom);
         }
 
-        public void AllocateSinglePath(List<Room> mainList, List<Room> previousList, int pathLength, int previousPathLength)
+        public virtual void AllocateSinglePath(List<Room> mainList, List<Room> previousList, int pathLength, int previousPathLength)
         {
             int roomRetryCounter = 0;
             int pathRetryCounter = 0;
@@ -174,7 +174,7 @@ namespace SimpleDungeon
             }
         }
 
-        private void ClearPath(List<Room> list)
+        protected void ClearPath(List<Room> list)
         {
             for(int i = 0; i < list.Count; i++)
             {
@@ -193,7 +193,7 @@ namespace SimpleDungeon
             list.Add(roomList[0]);
         }
 
-        private void AllocateEndRoom()
+        protected virtual void AllocateEndRoom()
         {
             Room chosenRoom = bossRoomList[bossRoomList.Count - 1];
             RemoveRoomFromDungeon(chosenRoom);
@@ -211,7 +211,7 @@ namespace SimpleDungeon
             AddRoomToDungeon(secretRoomList[secretRoomList.Count - 1]);
         }
 
-        private void ConnectRooms()
+        protected void ConnectRooms()
         {
             for (int i = 1; i < bossRoomList.Count; i++)
             {
@@ -306,7 +306,7 @@ namespace SimpleDungeon
                 obj.transform.Translate(tile);
             }
         }
-        public void AddRoomToDungeon(Room room)
+        public virtual void AddRoomToDungeon(Room room)
         {
             room.SpawnTiles(this); 
             if (standardRooms.Contains(room.GetType()))

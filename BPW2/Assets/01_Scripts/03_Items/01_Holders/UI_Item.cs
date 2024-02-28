@@ -22,6 +22,7 @@ public class UI_Item : MonoBehaviour
         itemRef.OnItemUse += OnHeldItemUse;
         itemRef.uiItem = this;
         itemRef.gameObject.SetActive(false);
+        itemRef.OnItemAdd();
     }
 
     public void Use()
@@ -39,6 +40,7 @@ public class UI_Item : MonoBehaviour
         itemRef.gameObject.SetActive(true);
         itemRef.uiItem = null;
         itemRef.transform.position = dropPosition;
+        itemRef.OnItemRelease();
         currentSlot.ReleaseItem();
         currentSlot = null;
     }

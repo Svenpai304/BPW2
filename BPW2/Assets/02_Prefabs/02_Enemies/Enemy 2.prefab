@@ -9828,12 +9828,12 @@ MonoBehaviour:
   spawner: {fileID: 0}
   turnController: {fileID: 0}
   playerPosition: {x: 0, y: 0, z: 0}
-  lootSpawner: {fileID: 0}
+  lootSpawner: {fileID: 8757272987169081772, guid: f099a6400bf43624482797eb8812a795, type: 3}
   moveParticles: {fileID: 3454490798861780406}
   attackParticles: {fileID: 8474264161187465206}
-  attackDistance: 0
-  actionCooldown: 2
-  movementCooldown: 2
+  attackDistance: 2
+  actionCooldown: 4
+  movementCooldown: 3
   movementOptions:
   - {x: 2, y: 0, z: 0}
   - {x: -2, y: 0, z: 0}

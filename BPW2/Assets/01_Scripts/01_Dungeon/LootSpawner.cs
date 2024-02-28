@@ -22,6 +22,7 @@ public class LootSpawner : MonoBehaviour
             if (choice <= 0)
             {
                 SpawnItem(item);
+                return;
             }
         }
     }

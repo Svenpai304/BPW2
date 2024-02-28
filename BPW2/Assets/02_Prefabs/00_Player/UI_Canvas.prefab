@@ -371,7 +371,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6048952645e521f44b40dc57c1e50d4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inactiveAlpha: 0.6
+  inactiveAlpha: 0.4
   activeAlpha: 0.95
   playerActions: {fileID: 0}
   slots: []
@@ -1790,7 +1790,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bar: {fileID: 7736689977639265780}
-  frameRect: {fileID: 0}
+  barRect: {fileID: 2056441596856929994}
+  frameRect: {fileID: 3978833245081633166}
 --- !u!1 &8726928439883905899
 GameObject:
   m_ObjectHideFlags: 0
@@ -1850,7 +1851,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.08223566, g: 0.5660378, b: 0.11163794, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

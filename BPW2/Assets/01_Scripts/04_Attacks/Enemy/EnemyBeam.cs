@@ -16,6 +16,18 @@ public class EnemyBeam : EnemyAttack
     private void Start()
     {
         direction = (controller.playerPosition - controller.transform.position).normalized;
+        direction = new Vector3Int((int)Mathf.Round(direction.x), (int)Mathf.Round(direction.y), (int)Mathf.Round(direction.z));
+        if(Mathf.Abs(direction.z) == Mathf.Abs(direction.x))
+        {
+            if(UnityEngine.Random.Range(0, 2)  == 0 )
+            {
+                direction.x = 0;
+            }
+            else
+            {
+                direction.z = 0;
+            }
+        }
         transform.Translate(direction);
         Vector3 rotation = new Vector3(0, Vector3.SignedAngle(Vector3.forward, direction, Vector3.up), 0);
         turnPoint.Rotate(rotation);

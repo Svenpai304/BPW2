@@ -45,5 +45,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   possibleDrops:
-  - item: {fileID: 2488778715836381276, guid: 454e67c9d37c55141a5244d0ebaf7f31, type: 3}
+  - item: {fileID: 4489589439144182253, guid: 0e61631d92a914340bef166d2334aa31, type: 3}
+    dropChance: 6
+  - item: {fileID: 8110897080534271828, guid: 841d788c5acc61b469e55aa5b573e37c, type: 3}
+    dropChance: 2
+  - item: {fileID: 4706192964553679173, guid: f34bb96ba7fb95642b62732863f463bf, type: 3}
+    dropChance: 2
+  - item: {fileID: 3802278211690677580, guid: d5563eedb05b83d4e879f6d43e811e01, type: 3}
     dropChance: 2

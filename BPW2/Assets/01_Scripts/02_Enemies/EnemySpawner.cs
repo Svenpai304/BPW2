@@ -56,7 +56,7 @@ public class EnemySpawner : MonoBehaviour
             Vector3Int position = Vector3Int.zero;
             position.x = (int)transform.position.x + UnityEngine.Random.Range(minX, maxX);
             position.z = (int)transform.position.z + UnityEngine.Random.Range(minZ, maxZ);
-            List<Vector3> takenPositions = new List<Vector3>();
+            List<Vector3Int> takenPositions = new List<Vector3Int>();
             if (dungeon.dungeon.ContainsKey(position)) 
             {
                 if (dungeon.IsTileWalkable(position) && !takenPositions.Contains(position))
