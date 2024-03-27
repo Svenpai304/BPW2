@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3135480049201423932}
   - component: {fileID: 7192823480037454628}
   - component: {fileID: 166223689389028169}
+  - component: {fileID: 7241694942431694072}
   m_Layer: 0
   m_Name: Victory
   m_TagString: Untagged
@@ -97,3 +98,15 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.8, y: 5, z: 0.8}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &7241694942431694072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9037705590055375026}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 161a8dcdca3e8404a8ed82592facd8a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
