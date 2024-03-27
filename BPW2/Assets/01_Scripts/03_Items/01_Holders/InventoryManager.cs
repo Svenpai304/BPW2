@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class InventoryManager : MonoBehaviour
 {
-    public float inactiveAlpha = 0.6f;
-    public float activeAlpha = 0.8f;
+    public Color activeColor;
+    public Color inactiveColor;
 
     [HideInInspector] public PlayerActions playerActions;
     public List<UI_ItemSlot> slots = new List<UI_ItemSlot>();
@@ -38,12 +38,12 @@ public class InventoryManager : MonoBehaviour
 
     public void SetActiveSlot(UI_ItemSlot slot)
     {
-        foreach (Image image in slotImages)
+        for (int i = 0; i < weaponSlots; i++)
         {
-            image.color = new Color(image.color.r, image.color.g, image.color.b, inactiveAlpha);
-            if(image == slot.GetComponent<Image>())
+            slotImages[i].color = inactiveColor;
+            if(slotImages[i] == slot.GetComponent<Image>())
             {
-                image.color = new Color(image.color.r, image.color.g, image.color.b, activeAlpha);
+                slotImages[i].color = activeColor;
             }
         }
        
