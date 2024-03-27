@@ -34,6 +34,10 @@ public class PlayerActions : MonoBehaviour
         activeSlot = inventoryManager.slots[slot - 1];
         activeSlotNumber = slot;
         inventoryManager.SetActiveSlot(activeSlot);
+        if (Tutorial.instance != null)
+        {
+            Tutorial.instance.AdvanceTutorial(1);
+        }
     }
 
     public void Move(InputAction.CallbackContext context)
@@ -92,6 +96,11 @@ public class PlayerActions : MonoBehaviour
                 moveParticles.Play();
             }
         }
+        if(Tutorial.instance != null)
+        {
+            Tutorial.instance.AdvanceTutorial(0);
+            Tutorial.instance.AdvanceTutorial(3);
+        }
 
         turnController.currentTurn = TurnController.Turn.Enemy;
     }
@@ -113,11 +122,15 @@ public class PlayerActions : MonoBehaviour
                 turnController.currentTurn = TurnController.Turn.Enemy; break;
             case Item.ItemUseType.Orthogonal:
                 attackUI.SetAttackUI(Item.ItemUseType.Orthogonal);
-                attackUIOn = true;
-                break;
+                attackUIOn = true; break;
             case Item.ItemUseType.Self:
                 attackUI.SetAttackUI(Item.ItemUseType.Self);
                 attackUIOn = true; break;
+        }
+
+        if (Tutorial.instance != null)
+        {
+            Tutorial.instance.AdvanceTutorial(2);
         }
     }
 

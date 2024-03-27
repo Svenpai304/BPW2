@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerStatus : MonoBehaviour
 {
@@ -13,10 +14,14 @@ public class PlayerStatus : MonoBehaviour
 
     public PlayerActions actions;
     public HealthBar healthBar;
+    public GameObject gameOverCanvas;
+    public GameObject UICanvas;
     void Start()
     {
         health = maxHealth;
         UpdateHealthBar();
+        gameOverCanvas = FindObjectOfType<MenuButtons>(true).gameObject;
+        UICanvas = FindObjectOfType<UIComponent>(true).gameObject;
     }
 
     public void TakeDamage(int damage)
@@ -36,7 +41,7 @@ public class PlayerStatus : MonoBehaviour
             Die();
         }
     }
-    
+
     public void HealDamage(int heal)
     {
         foreach (var effect in onHealEffects)
@@ -72,8 +77,14 @@ public class PlayerStatus : MonoBehaviour
             if (effect != null)
             {
                 effect.OnDeath();
-
             }
+        }
+        Debug.Log(health);
+        if (health <= 0)
+        {
+            InputManager.instance.GetComponent<PlayerInput>().enabled = false;
+            UICanvas.SetActive(false);
+            gameOverCanvas.SetActive(true);
         }
     }
 }

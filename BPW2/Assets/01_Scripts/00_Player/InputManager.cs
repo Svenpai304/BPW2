@@ -6,8 +6,14 @@ using UnityEngine.InputSystem.Interactions;
 
 public class InputManager : MonoBehaviour
 {
-
+    public static InputManager instance;
     public PlayerActions playerActions;
+
+
+    private void Start()
+    {
+        instance = this;
+    }
 
     public void OnUse(InputAction.CallbackContext context)
     {
