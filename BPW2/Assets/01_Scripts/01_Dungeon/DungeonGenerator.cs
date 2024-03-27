@@ -44,7 +44,8 @@ namespace SimpleDungeon
         public List<Room> secretRoomList = new List<Room>();
         public List<GameObject> allInstantiatedPrefabs = new List<GameObject>();
 
-        
+        private int totalPathRetries;
+
         void Start()
         {
             Generate();
@@ -58,6 +59,7 @@ namespace SimpleDungeon
             Debug.Log("Start Generating");
             ClearDungeon();
             allInstantiatedPrefabs.Clear();
+            allInstantiatedPrefabs.TrimExcess();
             GenerateStart();
             AllocatePathRooms();
             AllocateEndRoom();
@@ -100,7 +102,7 @@ namespace SimpleDungeon
             AllocateSinglePath(bossRoomList, null, bossPathLength, 0);
             AllocateSinglePath(lootRoomList, bossRoomList, lootPathLength, bossPathLength);
             AllocateSinglePath(secretRoomList, lootRoomList, secretPathLength, lootPathLength);
-           
+
             RemoveRoomFromDungeon(bossRoomList[0]);
             int startRoomOffsetX = (roomSizeX - startRoomSizeX) / 2;
             int startRoomOffsetZ = (roomSizeZ - startRoomSizeZ) / 2;
@@ -115,6 +117,7 @@ namespace SimpleDungeon
         public virtual void AllocateSinglePath(List<Room> mainList, List<Room> previousList, int pathLength, int previousPathLength)
         {
             int roomRetryCounter = 0;
+            int totalRoomRetries = 0;
             int pathRetryCounter = 0;
             bool pathSplit = false;
             for (int i = 1; i < pathLength; i++)
@@ -152,18 +155,21 @@ namespace SimpleDungeon
                     {
                         i--;
                         roomRetryCounter++;
-                    }
-                    if (roomRetryCounter > 15)
-                    {
-                        pathRetryCounter++;
-                        i = 0;
-                        roomRetryCounter = 0;
+                        totalRoomRetries++;
+                        if (roomRetryCounter > 15)
+                        {
+                            ClearPath(mainList);
+                            pathRetryCounter++;
+                            totalPathRetries++;
+                            i = 0;
+                            roomRetryCounter = 0;
+                            if (pathRetryCounter > 10)
+                            {
+                                Debug.Log("Failed to generate path");
+                                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                            }
 
-                    }
-                    if (pathRetryCounter > 10)
-                    {
-                        Debug.Log("Failed to generate path");
-                        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                        }
                     }
                 }
                 else
@@ -172,11 +178,12 @@ namespace SimpleDungeon
                     pathLength++;
                 }
             }
+            Debug.Log($"Room retries: {totalRoomRetries} - Path retries: {totalPathRetries}");
         }
 
         protected void ClearPath(List<Room> list)
         {
-            for(int i = 0; i < list.Count; i++)
+            for (int i = 0; i < list.Count; i++)
             {
                 if (list != bossRoomList && !bossRoomList.Contains(list[i]))
                 {
@@ -231,9 +238,9 @@ namespace SimpleDungeon
                 Room otherRoom = secretRoomList[i - 1];
                 ConnectRooms(room, otherRoom);
             }
-            
+
         }
-        
+
         public void AllocateWalls()
         {
             var keys = dungeon.Keys.ToList();
@@ -300,15 +307,16 @@ namespace SimpleDungeon
             }
             foreach (Vector3Int tile in tilesToSetFloor)
             {
-                dungeon[tile] = TileType.Floor; 
+                dungeon[tile] = TileType.Floor;
                 GameObject obj = null;
                 obj = Instantiate(floorPrefab, floorPrefab.transform.position, Quaternion.identity, transform);
                 obj.transform.Translate(tile);
+                allInstantiatedPrefabs.Add(obj);
             }
         }
         public virtual void AddRoomToDungeon(Room room)
         {
-            room.SpawnTiles(this); 
+            room.SpawnTiles(this);
             if (standardRooms.Contains(room.GetType()))
             {
                 GameObject obj = Instantiate(spawnerPrefab, room.GetCenter(), Quaternion.identity, transform);
@@ -435,7 +443,7 @@ namespace SimpleDungeon
     public class RoomType
     {
         public Type type;
-        public RoomType(Type _type) 
+        public RoomType(Type _type)
         {
             type = _type;
         }
