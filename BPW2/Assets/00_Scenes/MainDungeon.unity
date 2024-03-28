@@ -2003,10 +2003,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tutorials:
   - Welcome! You can use WASD to move.
-  - Select one of your items with the number keys, or click the slot.
+  - Select one of your items with the number keys, or click the slot. You can hover
+    over items to see a description.
   - You can use your selected item by pressing E, then using the directional keys
     or clicking the arrows.
-  - Great! Now, please explore the dungeon to your heart's content!
+  - Great! You can also use the Q and R keys to drop selected items. Now, please
+    explore the dungeon to your heart's content!
   tutorialText: {fileID: 1634795183}
 --- !u!1001 &1506286568
 PrefabInstance:
