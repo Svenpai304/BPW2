@@ -15,8 +15,7 @@ public class HealthBar : MonoBehaviour
     private void Start()
     {
         currentScale = barRect.localScale.x;
-        scaleTranslationRatio = barRect.rect.width / barRect.localScale.x;
-        Debug.Log(scaleTranslationRatio);
+        scaleTranslationRatio = (barRect.rect.x * barRect.localScale.x) / currentScale;
     }
 
     public void UpdateBarValue(float health)
@@ -27,9 +26,9 @@ public class HealthBar : MonoBehaviour
     public void UpdateBarMaxValue(float newScale)
     {
         barRect.localScale = new Vector3(newScale * currentScale, barRect.localScale.y, barRect.localScale.z);
-        barRect.Translate(new Vector3((newScale * currentScale - currentScale) * scaleTranslationRatio, 0, 0)); 
+        barRect.Translate(new Vector3((currentScale - newScale * currentScale) * scaleTranslationRatio, 0, 0));
         frameRect.localScale = new Vector3(newScale * currentScale, frameRect.localScale.y, frameRect.localScale.z);
-        frameRect.Translate(new Vector3((newScale * currentScale - currentScale) * scaleTranslationRatio, 0, 0));
+        frameRect.Translate(new Vector3((currentScale - newScale * currentScale) * scaleTranslationRatio, 0, 0));
         currentScale *= newScale;
     }
 
